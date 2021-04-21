@@ -97,8 +97,80 @@ const startApp = () => {
                     break;
 
                 default:
-                    console.log(`Invalid actions: ${ answer.action}`);
+                    console.log(`Invalid actions: ${ answer.action }`);
                     break;
             }
         });
+};
+
+const viewAllEmp = () => {
+    db.query("", (err, res) => {
+
+    });
+};
+
+const viewEmpByDep = () => {
+    db.query("", (err, res) => {
+
+    });
+};
+
+const viewEmpByMan = () => {
+    db.query("", (err, res) => {
+
+    });
+};
+
+const addEmp = () => {
+    inquirer
+        .prompt([
+            {
+                
+            },
+        ])
+        .then((answer) => {
+
+        });
+};
+
+const removeEmp = () => {
+    db.query("", (err, res) => {
+
+    });
+};
+
+const updateEmpRole = () => {
+
+};
+
+const updateEmpMan = () => {
+
+};
+
+const viewAllRoles = () => {
+
+};
+
+const addRole = () => {
+
+};
+
+const removeRole = () => {
+
+};
+
+const viewAllDep = () => {
+
+};
+
+const addDep = () => {
+
+};
+
+const removeDep = () => {
+
+};
+
+const viewDepBudget = () => {
+
 };

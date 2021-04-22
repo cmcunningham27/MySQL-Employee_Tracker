@@ -1,6 +1,5 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const { ADDRGETNETWORKPARAMS } = require("node:dns");
 
 const db = mysql.createConnection({
     host: "localhost",
@@ -22,6 +21,7 @@ const startApp = () => {
             message: "What would you like to do?",
             name: "action",
             choices: [
+                "Exit",
                 "View All Employees",
                 "View All Employees by Department",
                 "View All Employees By Manager",
@@ -40,6 +40,10 @@ const startApp = () => {
         })
         .then((answer) => {
             switch (answer.action) {
+                case "Exit":
+                    db.end();
+                    break;
+
                 case "View All Employees":
                     viewAllEmp();
                     break;
@@ -104,7 +108,7 @@ const startApp = () => {
 };
 
 const viewAllEmp = () => {
-    db.query("", (err, res) => {
+    db.query("SELECT * FROM ", (err, res) => {
 
     });
 };
@@ -125,8 +129,44 @@ const addEmp = () => {
     inquirer
         .prompt([
             {
-                
+                type: "input",
+                message: "What is the employee's first name?",
+                name: "firstName"
             },
+            {
+                type: "input",
+                message: "What is the employee's last name?",
+                name: "lastName"
+            },
+            {
+                type: "list",
+                message: "What is the employee's role?",
+                name: "empRole",
+                choices: [
+                    "Sales Lead", 
+                    "Salesperson",
+                    "Lead Engineer",
+                    "Software Engineer",
+                    "Account Manager",
+                    "Accountant",
+                    "Legal Team Lead",
+                    "Lawyer"
+                ]
+            },
+            {
+                type: "list",
+                message: "Who is the employee's manager?",
+                name: "empManager",
+                choices: [
+                    db.query("SELECT employee.first_name, employee.last_name FROM employee", (err, res) => {
+                        if (err) throw err;
+                        managersArray = [],
+                        res.forEach(response => {
+                            managersArray.push(response.first_name, response.last_name);
+                        }
+                    })
+                ]
+            }
         ])
         .then((answer) => {
 

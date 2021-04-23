@@ -103,7 +103,7 @@ const startApp = () => {
                 default:
                     console.log(`Invalid actions: ${ answer.action }`);
                     break;
-            }
+            };
         });
 };
 
@@ -134,48 +134,119 @@ const viewEmpByMan = () => {
 };
 
 const addEmp = () => {
-    inquirer
-        .prompt([
-            {
-                type: "input",
-                message: "What is the employee's first name?",
-                name: "firstName"
-            },
-            {
-                type: "input",
-                message: "What is the employee's last name?",
-                name: "lastName"
-            },
-        ])
-        .then((answer) => {
-            db.query("INSERT INTO employee (first_name, last_name) VALUES (?, ?)",
-            [
-                answer.firstName,
-                answer.lastName
-            ]),
-            (err, res) => {
-                if (err) throw err;
-                whatRole();
+    // inquirer
+    //     .prompt([
+    //         {
+    //             type: "input",
+    //             message: "What is the employee's first name?",
+    //             name: "firstName"
+    //         },
+    //         {
+    //             type: "input",
+    //             message: "What is the employee's last name?",
+    //             name: "lastName"
+    //         },
+    //     ])
+    //     .then((answer) => {
+    //         db.query("INSERT INTO employee (first_name, last_name) VALUES (?, ?)",
+    //         [
+    //             answer.firstName,
+    //             answer.lastName
+    //         ]),
+    //         (err, res) => {
+    //             if (err) throw err;
+    //             whatRole();
                 
-            }
-        });
+    //         }
+    //     });
 };
 
-// const whatRole = () => {
-//     db.query("SELECT title from role", (err, res) => {
-//         if (err) throw err;
-//         inquirer
-//             .prompt()
-//     })
-// }
-
 const removeEmp = () => {
-    
+    db.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        const empArray = [];
+        res.forEach(({ first_name, last_name}) => {
+            const name = `${first_name} ${last_name}`;
+            empArray.push(name);
+            return empArray;
+        });
+        inquirer
+            .prompt({
+                type: "list",
+                message: "Which employee do you wish to remove?",
+                name: "empRemove",
+                choices: empArray
+            })
+            .then((answer) => {
+                const str = answer.empManUpdate;
+                const firstWord = str.split(" ")[0];
+                db.query("DELETE * FROM employee where ?",
+                {
+                    first_name: firstWord
+                },
+                (err, res) => {
+                    if (err) throw err;
+                    console.table(res);
+                });
+            });
+    });
 };
 
 const updateEmpRole = () => {
-    inquirer
-        .prompt()
+    db.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        const empArray = [];
+        res.forEach(({ first_name, last_name}) => {
+            const name = `${first_name} ${last_name}`;
+            empArray.push(name);
+            return empArray;
+        });
+        inquirer
+            .prompt({
+                type: "list",
+                message: "Which employee's role do you want to update?",
+                name: "empRoleUpdate",
+                choices: empArray
+            })
+            .then((answer) => {
+                const str = answer.empRoleUpdate;
+                const firstWord = str.split(" ")[0];
+                whichRole(firstWord);
+            });
+    });
+};
+
+const whichRole = (firstWord) => {
+    db.query("SELECT * FROM role", 
+        (err, res) => {
+        if (err) throw err;
+        const roleArray = [];
+        res.forEach(({ id, title, salary}) => {
+            const role = `${id} ${title} ${salary}`;
+            roleArray.push(role);
+        });
+        inquirer
+            .prompt({
+                type: "list",
+                message: "Which role do you want to set for the selected employee?",
+                name: "role",
+                choices: roleArray
+            })
+            .then((answer) => {
+                const str = answer.role;
+                const id = str.split(" ")[0];
+                db.query("UPDATE employee SET ? WHERE ?",
+                [
+                    {role_id: id},
+                    {first_name: firstWord}
+                ],
+                (err, res) => {
+                    if (err) throw err;
+                    console.log("Employee's role was changed!");
+                    startApp();
+                });
+            });
+        });
 };
 
 const updateEmpMan = () => {
@@ -197,31 +268,21 @@ const updateEmpMan = () => {
             .then((answer) => {
                 const str = answer.empManUpdate;
                 const firstWord = str.split(" ")[0];
-                // db.query("SELECT * FROM employee where ?",
-                // {
-                //     first_name: firstWord
-                // },
-                // (err, res) => {
-                //     if (err) throw err;
-                //     console.table(res);
-                    whichMan(firstWord);
-                })
-            })
-        };
+                whichMan(firstWord);
+            });
+    });
+};
         
-    
 
 const whichMan = (firstWord) => {
     db.query("SELECT * FROM employee", 
         (err, res) => {
         if (err) throw err;
-        console.log(res);
         const manArray = [];
-        res.forEach(({ first_name, last_name}) => {
-            const name = `${first_name} ${last_name}`;
+        res.forEach(({ id, first_name, last_name}) => {
+            const name = `${id} ${first_name} ${last_name}`;
             manArray.push(name);
         });
-        console.log(manArray);
         inquirer
             .prompt({
                 type: "list",
@@ -230,17 +291,27 @@ const whichMan = (firstWord) => {
                 choices: manArray
             })
             .then((answer) => {
-                const 
-                db.query("UPDATE employee SET ? WHERE ?")
-            })
-    })
-}
+                const str = answer.manager;
+                const id = str.split(" ")[0];
+                db.query("UPDATE employee SET ? WHERE ?",
+                [
+                    {manager_id: id},
+                    {first_name: firstWord}
+                ],
+                (err, res) => {
+                    if (err) throw err;
+                    console.log("Employee's manager was changed!");
+                    startApp();
+                });
+            });
+        });
+};
 
 const viewAllRoles = () => {
     db.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
         console.table(res);
-    })
+    });
 };
 
 const addRole = () => {
@@ -307,7 +378,6 @@ const addDep = () => {
                 startApp();
             });
         });
-
 };
 
 const removeDep = () => {

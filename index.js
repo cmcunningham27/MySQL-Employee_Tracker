@@ -108,20 +108,28 @@ const startApp = () => {
 };
 
 const viewAllEmp = () => {
-    db.query("SELECT * FROM ", (err, res) => {
-
+    db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON (manager.id = employee.manager_id) INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY employee.id", (err, res) => {//joins
+        if (err) throw err;
+        console.table(res)
+        startApp();
     });
 };
 
 const viewEmpByDep = () => {
-    db.query("", (err, res) => {
-
-    });
+    db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON (manager.id = employee.manager_id) INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY department.name", 
+    (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        startApp();
+    }); 
 };
 
 const viewEmpByMan = () => {
-    db.query("", (err, res) => {
-
+    db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON (manager.id = employee.manager_id) INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY manager.id", 
+    (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        startApp();
     });
 };
 
@@ -138,61 +146,136 @@ const addEmp = () => {
                 message: "What is the employee's last name?",
                 name: "lastName"
             },
-            {
-                type: "list",
-                message: "What is the employee's role?",
-                name: "empRole",
-                choices: [
-                    "Sales Lead", 
-                    "Salesperson",
-                    "Lead Engineer",
-                    "Software Engineer",
-                    "Account Manager",
-                    "Accountant",
-                    "Legal Team Lead",
-                    "Lawyer"
-                ]
-            },
-            {
-                type: "list",
-                message: "Who is the employee's manager?",
-                name: "empManager",
-                choices: [
-                    db.query("SELECT employee.first_name, employee.last_name FROM employee", (err, res) => {
-                        if (err) throw err;
-                        managersArray = [],
-                        res.forEach(response => {
-                            managersArray.push(response.first_name, response.last_name);
-                        }
-                    })
-                ]
-            }
         ])
         .then((answer) => {
-
+            db.query("INSERT INTO employee (first_name, last_name) VALUES (?, ?)",
+            [
+                answer.firstName,
+                answer.lastName
+            ]),
+            (err, res) => {
+                if (err) throw err;
+                whatRole();
+                
+            }
         });
 };
 
-const removeEmp = () => {
-    db.query("", (err, res) => {
+// const whatRole = () => {
+//     db.query("SELECT title from role", (err, res) => {
+//         if (err) throw err;
+//         inquirer
+//             .prompt()
+//     })
+// }
 
-    });
+const removeEmp = () => {
+    
 };
 
 const updateEmpRole = () => {
-
+    inquirer
+        .prompt()
 };
 
 const updateEmpMan = () => {
+    db.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        const empArray = [];
+        res.forEach(({ first_name, last_name}) => {
+            const name = `${first_name} ${last_name}`;
+            empArray.push(name);
+            return empArray;
+        });
+        inquirer
+            .prompt({
+                type: "list",
+                message: "Which employee's manager do you want to update?",
+                name: "empManUpdate",
+                choices: empArray
+            })
+            .then((answer) => {
+                const str = answer.empManUpdate;
+                const firstWord = str.split(" ")[0];
+                // db.query("SELECT * FROM employee where ?",
+                // {
+                //     first_name: firstWord
+                // },
+                // (err, res) => {
+                //     if (err) throw err;
+                //     console.table(res);
+                    whichMan(firstWord);
+                })
+            })
+        };
+        
+    
 
-};
+const whichMan = (firstWord) => {
+    db.query("SELECT * FROM employee", 
+        (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        const manArray = [];
+        res.forEach(({ first_name, last_name}) => {
+            const name = `${first_name} ${last_name}`;
+            manArray.push(name);
+        });
+        console.log(manArray);
+        inquirer
+            .prompt({
+                type: "list",
+                message: "Which employee do you want to set as manager for the selected employee?",
+                name: "manager",
+                choices: manArray
+            })
+            .then((answer) => {
+                const 
+                db.query("UPDATE employee SET ? WHERE ?")
+            })
+    })
+}
 
 const viewAllRoles = () => {
-
+    db.query("SELECT * FROM role", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+    })
 };
 
 const addRole = () => {
-
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What role do you want to add?",
+                name: "newRole"
+            },
+            {
+                type: "input",
+                message: "What salary does this role have?",
+                name: "newSalary"
+            },
+            {
+                type: "input",
+                message: "What is the department's number for this role?",
+                name: "depID",
+                validate: val => /[0-9]/i.test(val) ? true : `Must be a number`
+            }
+        ])
+        .then ((answer) => {
+            db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
+            [
+                answer.newRole,
+                answer.newSalary,
+                answer.depID
+            ],
+            (err, res) => {
+                if (err) throw err;
+                console.log(`The ${ answer.newRole } role with a salary of ${ answer.newSalary} has been added`);
+                startApp();
+            });
+        });
 };
 
 const removeRole = () => {
@@ -200,10 +283,30 @@ const removeRole = () => {
 };
 
 const viewAllDep = () => {
-
+    db.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        console.table(res);
+    });
 };
 
 const addDep = () => {
+    inquirer
+        .prompt({
+            type: "input",
+            message: "What is the name of the department you want to add?",
+            name: "depName"
+        })
+        .then((answer) => {
+            db.query("INSERT INTO department SET ?",
+            {
+                name: answer.depName
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log(`${answer.depName} department has been added!`);
+                startApp();
+            });
+        });
 
 };
 
@@ -214,3 +317,4 @@ const removeDep = () => {
 const viewDepBudget = () => {
 
 };
+

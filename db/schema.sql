@@ -26,6 +26,6 @@ create table employee(
     role_id int not null,
     constraint fk_role foreign key (role_id) references role(id) on delete cascade,
     manager_id int null,
-    constraint fk_employee foreign key (manager_id) references employee(id) on delete cascade,
+    constraint fk_employee foreign key (manager_id) references employee(id) on delete set null,
     primary key(id),
 );

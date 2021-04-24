@@ -1,16 +1,16 @@
-drop database if exists employees_DB;
+DROP DATABASE IF EXISTS employees_DB;
 
-create database employees_DB;
+CREATE DATABASE employees_DB;
 
-use employees_DB;
+USE employees_DB;
 
-create table department(
+CREATE TABLE department(
 	id int auto_increment,
     name varchar(30) not null,
     primary key(id)
 );
 
-create table role(
+CREATE TABLE role(
 	id int auto_increment,
     title varchar(30) not null,
     salary decimal(10, 2),
@@ -19,7 +19,7 @@ create table role(
     constraint fk_department foreign key (department_id) references department(id) on delete cascade
 );
 
-create table employee(
+CREATE TABLE employee(
 	id int auto_increment,
     first_name varchar(30) not null,
     last_name varchar(30) not null,

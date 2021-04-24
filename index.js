@@ -1,6 +1,8 @@
+//dependencies for app
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 
+//creates a connection to mysql, and tells which database to use
 const db = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -9,6 +11,7 @@ const db = mysql.createConnection({
     database: "employees_DB"
 });
 
+//starts connection, to listen, and start the app
 db.connect((err) => {
     if (err) throw err;
     startApp();
@@ -174,7 +177,6 @@ const removeEmp = () => {
         res.forEach(({ first_name, last_name}) => {
             const name = `${first_name} ${last_name}`;
             empArray.push(name);
-            return empArray;
         });
         inquirer
             .prompt({
@@ -184,7 +186,7 @@ const removeEmp = () => {
                 choices: empArray
             })
             .then((answer) => {
-                const str = answer.empManUpdate;
+                const str = answer.empRemove;
                 const firstWord = str.split(" ")[0];
                 db.query("DELETE * FROM employee where ?",
                 {
@@ -360,7 +362,34 @@ const addRole = () => {
 
 //Prompts the user to choose a role they wish to delete, then removes its row from the role table
 const removeRole = () => {
-
+    db.query("SELECT * FROM role", (err, res) => {
+        if (err) throw err;
+        const roleArray = [];
+        res.forEach(({ title}) => {
+            const name = `${title}`;
+            roleArray.push(name);
+            return roleArray;
+        });
+        inquirer
+            .prompt({
+                type: "list",
+                message: "Which role do you wish to remove?",
+                name: "roleRemove",
+                choices: roleArray
+            })
+            .then((answer) => {
+                const str = answer.roleRemove;
+                // const firstWord = str.split(" ")[0];
+                db.query("DELETE * FROM employee where ?",
+                {
+                    title: str
+                },
+                (err, res) => {
+                    if (err) throw err;
+                    console.table(res);
+                });
+            });
+    });
 };
 
 //Consoles the department table for the user

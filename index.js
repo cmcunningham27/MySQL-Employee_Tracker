@@ -14,6 +14,7 @@ db.connect((err) => {
     startApp();
 });
 
+//Prompts the user with the initial question of what they wish to do first or next, then calls appropriate function
 const startApp = () => {
     inquirer
         .prompt({
@@ -107,6 +108,7 @@ const startApp = () => {
         });
 };
 
+//Consoles joined tables with each employees information
 const viewAllEmp = () => {
     db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON (manager.id = employee.manager_id) INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY employee.id", (err, res) => {//joins
         if (err) throw err;
@@ -115,6 +117,7 @@ const viewAllEmp = () => {
     });
 };
 
+//Consoles joined tables with each employees information, and groups them by the Departments
 const viewEmpByDep = () => {
     db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON (manager.id = employee.manager_id) INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY department.name", 
     (err, res) => {
@@ -124,6 +127,7 @@ const viewEmpByDep = () => {
     }); 
 };
 
+//Consoles joined tables with each employees information, and groups them by the Managers
 const viewEmpByMan = () => {
     db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON (manager.id = employee.manager_id) INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) ORDER BY manager.id", 
     (err, res) => {
@@ -133,6 +137,7 @@ const viewEmpByMan = () => {
     });
 };
 
+//
 const addEmp = () => {
     // inquirer
     //     .prompt([
@@ -161,6 +166,7 @@ const addEmp = () => {
     //     });
 };
 
+//Prompts the user to choose an employee they want to remove, then deletes that employee's row from the employee table
 const removeEmp = () => {
     db.query("SELECT * FROM employee", (err, res) => {
         if (err) throw err;
@@ -192,6 +198,7 @@ const removeEmp = () => {
     });
 };
 
+//Prompts user to choose employee and which role they want them to have, then makes the change in the database for them
 const updateEmpRole = () => {
     db.query("SELECT * FROM employee", (err, res) => {
         if (err) throw err;
@@ -249,6 +256,7 @@ const whichRole = (firstWord) => {
         });
 };
 
+//Prompts user to choose employee and which employee they want to be their manager, then makes the change in the database for them
 const updateEmpMan = () => {
     db.query("SELECT * FROM employee", (err, res) => {
         if (err) throw err;
@@ -273,7 +281,6 @@ const updateEmpMan = () => {
     });
 };
         
-
 const whichMan = (firstWord) => {
     db.query("SELECT * FROM employee", 
         (err, res) => {
@@ -307,6 +314,7 @@ const whichMan = (firstWord) => {
         });
 };
 
+//Consoles the role table for the user to see
 const viewAllRoles = () => {
     db.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
@@ -314,6 +322,7 @@ const viewAllRoles = () => {
     });
 };
 
+//Prompts the user to choose the title for a new role, the salary, and department id, then adds it as a new row in the role table
 const addRole = () => {
     inquirer
         .prompt([
@@ -349,10 +358,12 @@ const addRole = () => {
         });
 };
 
+//Prompts the user to choose a role they wish to delete, then removes its row from the role table
 const removeRole = () => {
 
 };
 
+//Consoles the department table for the user
 const viewAllDep = () => {
     db.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
@@ -360,6 +371,7 @@ const viewAllDep = () => {
     });
 };
 
+//Prompts the user to add a department, then adds its row to the department table
 const addDep = () => {
     inquirer
         .prompt({
@@ -380,10 +392,12 @@ const addDep = () => {
         });
 };
 
+//Prompts the user to choose a department to remove, then deletes its row from the department table
 const removeDep = () => {
 
 };
 
+//
 const viewDepBudget = () => {
 
 };

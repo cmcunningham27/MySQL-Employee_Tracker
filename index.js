@@ -194,7 +194,8 @@ const removeEmp = () => {
                 },
                 (err, res) => {
                     if (err) throw err;
-                    console.table(res);
+                    console.table(`${ answer.empRemove} was removed!`);
+                    startApp();
                 });
             });
     });
@@ -321,6 +322,7 @@ const viewAllRoles = () => {
     db.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
         console.table(res);
+        startApp();
     });
 };
 
@@ -379,14 +381,14 @@ const removeRole = () => {
             })
             .then((answer) => {
                 const str = answer.roleRemove;
-                // const firstWord = str.split(" ")[0];
-                db.query("DELETE * FROM employee where ?",
+                db.query("DELETE * FROM role where ?",
                 {
                     title: str
                 },
                 (err, res) => {
                     if (err) throw err;
-                    console.table(res);
+                    console.log(`${ answer.roleRemove } was removed!`);
+                    startApp();
                 });
             });
     });
@@ -397,6 +399,7 @@ const viewAllDep = () => {
     db.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
         console.table(res);
+        startApp();
     });
 };
 
@@ -423,7 +426,34 @@ const addDep = () => {
 
 //Prompts the user to choose a department to remove, then deletes its row from the department table
 const removeDep = () => {
-
+    db.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        const depArray = [];
+        res.forEach(({ title}) => {
+            const name = `${title}`;
+            depArray.push(name);
+            return depArray;
+        });
+        inquirer
+            .prompt({
+                type: "list",
+                message: "Which department do you wish to remove?",
+                name: "depRemove",
+                choices: depArray
+            })
+            .then((answer) => {
+                const str = answer.depRemove;
+                db.query("DELETE * FROM department where ?",
+                {
+                    name: str
+                },
+                (err, res) => {
+                    if (err) throw err;
+                    console.log(`${ answer.depRemove } was removed!`);
+                    startApp();
+                });
+            });
+    });
 };
 
 //

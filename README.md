@@ -4,9 +4,9 @@
 ## Descriptions
 ---
 I created this app to allow business owners the ability to view and manage their departments, roles, and employees in their company to help with organization and planning for their business. This app does everything for the owner, and all they have to do is answer questions. Based on their choices and answers they will be able to view their departments, roles, employees/employees by department/employees by manager, the total utilized budget of a department, or add/remove/update any department, role, or employee. I learned how quickly a simple change can be when you have the foundational functions done for you. A business owner can easily update their tables instead of having to scroll to find a particular department, role, or employee and then make the changes. 
-## Deployed Link
+## Repository
 ---
-[Deployed Application URL]()
+[Application Repository URL](https://github.com/cmcunningham27/MySQL-Employee_Tracker)
 ## Table of Contents
 ---
 - [Installation](#installation)
@@ -14,8 +14,6 @@ I created this app to allow business owners the ability to view and manage their
 - [License](#license)
 - [Complications](#complications)
 - [Features](#features)
-- [Contribute](#contribute)
-- [Tests](#tests)
 - [Questions](#questions)
 ## Installation
 ---
@@ -25,7 +23,7 @@ I created this app to allow business owners the ability to view and manage their
 4. You will be prompted with choices and questions. The app is working!
 ## Usage
 ---
-[screenshot]()
+[Demonstration Video]()
 1. Once the app has begun scroll down the list and find Add Department, then press the enter button on your keyboard.
 2. You will then enter the Department name and press the enter key again. 
 3. Repeat steps 1-2 for each department in your business.
@@ -46,13 +44,7 @@ Creating the correct SELECT by JOINING all three tables was difficult at first. 
 In one function I had placed the inquirer in the wrong location and couldn't figure out why an array was coming back undefined. I tried to get some help, and the person was unable to help me figure it out. I decided to try to move in in the first db.query right after the err part and this solved the problem. 
 ## Features
 ---
-In the future I would like to include an extra option where the business owner can view a specific employee.
-## Contribute
----
-
-## Tests
----
-
+In the future I would like to include an extra option where the business owner can view a specific employee, and the option to View the Total Utilized Budget for the Whole Company.
 ## Questions
 ---
 [GitHub Profile](https://github.com/cmcunningham27)

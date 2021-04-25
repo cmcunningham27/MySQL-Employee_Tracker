@@ -3,6 +3,7 @@
 ---
 ## Descriptions
 ---
+![Screenshot](./assets/images/Screenshot.png)
 I created this app to allow business owners the ability to view and manage their departments, roles, and employees in their company to help with organization and planning for their business. This app does everything for the owner, and all they have to do is answer questions. Based on their choices and answers they will be able to view their departments, roles, employees/employees by department/employees by manager, the total utilized budget of a department, or add/remove/update any department, role, or employee. I learned how quickly a simple change can be when you have the foundational functions done for you. A business owner can easily update their tables instead of having to scroll to find a particular department, role, or employee and then make the changes. 
 ## Repository
 ---

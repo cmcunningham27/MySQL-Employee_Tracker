@@ -168,6 +168,7 @@ const addEmp = () => {
         });
 };
 
+//Prompts user with a list of current roles and updates the employee's role of their choice in the database
 const whatRole = (firstName) => {
     db.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
@@ -257,6 +258,7 @@ const updateEmpRole = () => {
     });
 };
 
+//Prompts user with a list of current roles and updates the employee's role of their choice in the database
 const whichRole = (firstName) => {
     db.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
@@ -316,6 +318,7 @@ const updateEmpMan = () => {
     });
 };
         
+//Prompts user with a list of current employees and updates the employee's manager of their choice in the database
 const whichMan = (firstWord) => {
     db.query("SELECT * FROM employee", 
         (err, res) => {
@@ -487,7 +490,7 @@ const removeDep = () => {
     });
 };
 
-//
+//Prompts the user with a list of current departments, collects the salaries of all employees in the department of their choice, turns the strings into integers as they are pushed into an array, and calls the totalBudget function
 const viewDepBudget = () => {
     db.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
@@ -526,12 +529,12 @@ const viewDepBudget = () => {
     });
 };
 
+//Finds the sum of all salaries in the department of the user's choice and logs a message for the user with that information
 const totalBudget = (array, department) => {
     let sum = 0;
     for (let i = 0; i < array.length; i++) {
         sum += array[i];
-    }
+    };
     console.log(`The total budget for the ${department} department is ${sum}.`);
     startApp();
-}
-
+};

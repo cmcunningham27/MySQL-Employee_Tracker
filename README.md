@@ -28,6 +28,13 @@ I created this app to allow business owners the ability to view and manage their
 [screenshot]()
 1. Once the app has begun scroll down the list and find Add Department, then press the enter button on your keyboard.
 2. You will then enter the Department name and press the enter key again. 
+3. Repeat steps 1-2 for each department in your business.
+4. Now scroll down and find Add Role, and enter the role's name and the salary that goes with it for each role in your business.
+5. Now you can scroll to Add Employee and add all your employees into the app, their role, and their manager.
+6. When you choose to View Employees, Roles, or Departments you will be prompted with choices of which ones you would like to see.
+7. In order to remove a Department, Role, or Employee scroll down the list and choose which one you would like to remove.
+8. As Departments, Roles, and/or Employees are changing you will want to update the information. Scroll to the Update option that applies to the change and make the updates.
+9. If you would like to see the total utilized budget for a specific department in your business you can scroll to View Total Budget By Department and choose which department you would like to view.
 ## License
 ---
 This project is licensed under the MIT license.

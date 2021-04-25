@@ -41,7 +41,9 @@ This project is licensed under the MIT license.
 ## Complications
 ---
 Getting started was hard at first because I was trying to work on the function for viewing all employees, but I did not have any values in the tables to utilize. Once I realized that I needed to include fake deparments, roles, and employees it began to fall into place. 
+
 Creating the correct SELECT by JOINING all three tables was difficult at first. It took a lot of researching, but I finally found that some of the column names needed to be set AS what they were and that I then could use those names when joining the tables. This is something I will need to continue using in the future to strengthen this skill.
+
 In one function I had placed the inquirer in the wrong location and couldn't figure out why an array was coming back undefined. I tried to get some help, and the person was unable to help me figure it out. I decided to try to move in in the first db.query right after the err part and this solved the problem. 
 ## Features
 ---

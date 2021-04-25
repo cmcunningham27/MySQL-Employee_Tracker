@@ -140,7 +140,7 @@ const viewEmpByMan = () => {
     });
 };
 
-//
+//Prompts the user to enter an employee's first and last name, calls whatRole function to prompt user to choose a role, calls the whatMan function to prompt user to choose a manager, and then creates the new employee row in the database
 const addEmp = () => {
     inquirer
         .prompt([
@@ -194,43 +194,10 @@ const whatRole = (firstName) => {
                 ],
                 (err, res) => {
                     if (err) throw err;
-                    whatMan(firstName);
+                    whichMan(firstName);
                 });
             });
     });    
-};
-
-const whatMan = (firstName) => {
-    db.query("SELECT * FROM employee", (err, res) => {
-        if (err) throw err;
-        const manArray = [];
-        res.forEach(({id, first_name, last_name}) => {
-            const mans = `${id} ${first_name} ${last_name}`;
-            manArray.push(mans);
-        });
-        inquirer
-            .prompt(
-                {
-                    type: "list",
-                    message: "Who is the employee's manager?",
-                    name: "empMan",
-                    choices: manArray
-                }
-            )
-            .then((answer) => {
-                const manStr = answer.empMan;
-                const manId = manStr.split(" ")[0];
-                db.query("UPDATE employee SET ? WHERE ?",
-                [
-                    {manager_id: manId},
-                    {first_name: firstName}
-                ],
-                (err, res) => {
-                    if (err) throw err;
-                    startApp();
-                });
-            });
-    });
 };
 
 //Prompts the user to choose an employee they want to remove, then deletes that employee's row from the employee table
@@ -290,7 +257,7 @@ const updateEmpRole = () => {
     });
 };
 
-const whichRole = (firstWord) => {
+const whichRole = (firstName) => {
     db.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
         const roleArray = [];
@@ -308,10 +275,12 @@ const whichRole = (firstWord) => {
             .then((answer) => {
                 const str = answer.role;
                 const id = str.split(" ")[0];
-                db.query("UPDATE employee SET ? WHERE ?",
+                const roleSal = str.split(" ")[2];
+                db.query("UPDATE employee SET ?, ? WHERE ?",
                 [
                     {role_id: id},
-                    {first_name: firstWord}
+                    {salary: roleSal},
+                    {first_name: firstName}
                 ],
                 (err, res) => {
                     if (err) throw err;

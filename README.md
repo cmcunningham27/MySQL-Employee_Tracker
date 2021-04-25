@@ -23,7 +23,7 @@ I created this app to allow business owners the ability to view and manage their
 4. You will be prompted with choices and questions. The app is working!
 ## Usage
 ---
-[Demonstration Video]()
+[Demonstration Video](https://drive.google.com/file/d/1OLk0wcnwWe39vT8kUodMGEwwfP-Mew5g/view)
 1. Once the app has begun scroll down the list and find Add Department, then press the enter button on your keyboard.
 2. You will then enter the Department name and press the enter key again. 
 3. Repeat steps 1-2 for each department in your business.

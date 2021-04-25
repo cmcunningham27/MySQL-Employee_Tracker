@@ -175,26 +175,29 @@ const whatRole = (firstName) => {
         res.forEach(({id, title}) => {
             const roles = `${id} ${title}`;
             roleArray.push(roles);
+            
         }); 
-    });
-    inquirer
-        .prompt({
-            type: "list",
-            message: "What is the employee's role?",
-            name: "empRole",
-            choices: roleArray
-        })
-        .then((answer) => {
-            db.query("UPDATE employee SET ? WHERE ?", 
-            [
-                {role_id: answer.empRole},
-                {first_name: firstName}  
-            ],
-            (err, res) => {
-                if (err) throw err;
-                whatMan(firstName);
+        inquirer
+            .prompt({
+                type: "list",
+                message: "What is the employee's role?",
+                name: "empRole",
+                choices: roleArray
+            })
+            .then((answer) => {
+                const roleStr = answer.empRole;
+                const roleId = roleStr.split(" ")[0];
+                db.query("UPDATE employee SET ? WHERE ?", 
+                [
+                    {role_id: roleId},
+                    {first_name: firstName}  
+                ],
+                (err, res) => {
+                    if (err) throw err;
+                    whatMan(firstName);
+                });
             });
-        });
+    });    
 };
 
 const whatMan = (firstName) => {
@@ -205,28 +208,30 @@ const whatMan = (firstName) => {
             const mans = `${id} ${first_name} ${last_name}`;
             manArray.push(mans);
         });
+        inquirer
+            .prompt(
+                {
+                    type: "list",
+                    message: "Who is the employee's manager?",
+                    name: "empMan",
+                    choices: manArray
+                }
+            )
+            .then((answer) => {
+                const manStr = answer.empMan;
+                const manId = manStr.split(" ")[0];
+                db.query("UPDATE employee SET ? WHERE ?",
+                [
+                    {manager_id: manId},
+                    {first_name: firstName}
+                ],
+                (err, res) => {
+                    if (err) throw err;
+                    startApp();
+                });
+            });
     });
-    inquirer
-        .prompt(
-            {
-                type: "list",
-                message: "Who is the employee's manager?",
-                name: "empMan",
-                choices: manArray
-            }
-        )
-        .then((answer) => {
-            db.query("UPDATE employee SET ? WHERE ?",
-            [
-                {manager_id: answer.empMan},
-                {first_name: firstName}
-            ],
-            (err, res) => {
-                if (err) throw err;
-                startApp();
-            })
-        })
-}
+};
 
 //Prompts the user to choose an employee they want to remove, then deletes that employee's row from the employee table
 const removeEmp = () => {
@@ -314,7 +319,7 @@ const whichRole = (firstWord) => {
                     startApp();
                 });
             });
-        });
+    });
 };
 
 //Prompts user to choose employee and which employee they want to be their manager, then makes the change in the database for them
@@ -372,7 +377,7 @@ const whichMan = (firstWord) => {
                     startApp();
                 });
             });
-        });
+    });
 };
 
 //Consoles the role table for the user to see
@@ -515,6 +520,49 @@ const removeDep = () => {
 
 //
 const viewDepBudget = () => {
-
+    db.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        const depArray = [];
+        res.forEach(({id, name}) => {
+            const dep = `${id} ${name}`;
+            depArray.push(dep);
+        });
+        inquirer   
+            .prompt(
+                {
+                    type: "list",
+                    message: "Which department's budget do you want?",
+                    name: "depBudget",
+                    choices: depArray
+                }
+            )
+            .then((answer) => {
+                const depStr = answer.depBudget;
+                const depName = depStr.split(" ")[1];
+                const depId = depStr.split(" ")[0];
+                db.query("SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN employee manager ON (manager.id = employee.manager_id) INNER JOIN role ON (role.id = employee.role_id) INNER JOIN department ON (department.id = role.department_id) WHERE ?",
+                [
+                    {department_id: depId}
+                ], 
+                (err, res) => {
+                    if (err) throw err;
+                    const depSalary = [];
+                    res.forEach(({salary}) => {
+                        const eachSalary = parseInt(`${salary}`);
+                        depSalary.push(eachSalary);
+                    })
+                    totalBudget(depSalary, depName);
+                })
+            })
+    });
 };
+
+const totalBudget = (array, department) => {
+    let sum = 0;
+    for (let i = 0; i < array.length; i++) {
+        sum += array[i];
+    }
+    console.log(`The total budget for the ${department} department is ${sum}.`);
+    startApp();
+}
 

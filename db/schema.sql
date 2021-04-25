@@ -23,7 +23,7 @@ CREATE TABLE employee(
 	id int auto_increment,
     first_name varchar(30) not null,
     last_name varchar(30) not null,
-    role_id int not null,
+    role_id int null,
     constraint fk_role foreign key (role_id) references role(id) on delete cascade,
     manager_id int null,
     constraint fk_employee foreign key (manager_id) references employee(id) on delete set null,

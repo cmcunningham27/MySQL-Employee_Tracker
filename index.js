@@ -142,32 +142,91 @@ const viewEmpByMan = () => {
 
 //
 const addEmp = () => {
-    // inquirer
-    //     .prompt([
-    //         {
-    //             type: "input",
-    //             message: "What is the employee's first name?",
-    //             name: "firstName"
-    //         },
-    //         {
-    //             type: "input",
-    //             message: "What is the employee's last name?",
-    //             name: "lastName"
-    //         },
-    //     ])
-    //     .then((answer) => {
-    //         db.query("INSERT INTO employee (first_name, last_name) VALUES (?, ?)",
-    //         [
-    //             answer.firstName,
-    //             answer.lastName
-    //         ]),
-    //         (err, res) => {
-    //             if (err) throw err;
-    //             whatRole();
-                
-    //         }
-    //     });
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the employee's first name?",
+                name: "firstName"
+            },
+            {
+                type: "input",
+                message: "What is the employee's last name?",
+                name: "lastName"
+            },
+        ])
+        .then((answer) => {
+            db.query("INSERT INTO employee (first_name, last_name) VALUES (?, ?)",
+            [
+                answer.firstName,
+                answer.lastName
+            ],
+            (err, res) => {
+                if (err) throw err;
+                whatRole(answer.firstName);
+            });
+        });
 };
+
+const whatRole = (firstName) => {
+    db.query("SELECT * FROM role", (err, res) => {
+        if (err) throw err;
+        const roleArray = [];
+        res.forEach(({id, title}) => {
+            const roles = `${id} ${title}`;
+            roleArray.push(roles);
+        }); 
+    });
+    inquirer
+        .prompt({
+            type: "list",
+            message: "What is the employee's role?",
+            name: "empRole",
+            choices: roleArray
+        })
+        .then((answer) => {
+            db.query("UPDATE employee SET ? WHERE ?", 
+            [
+                {role_id: answer.empRole},
+                {first_name: firstName}  
+            ],
+            (err, res) => {
+                if (err) throw err;
+                whatMan(firstName);
+            });
+        });
+};
+
+const whatMan = (firstName) => {
+    db.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        const manArray = [];
+        res.forEach(({id, first_name, last_name}) => {
+            const mans = `${id} ${first_name} ${last_name}`;
+            manArray.push(mans);
+        });
+    });
+    inquirer
+        .prompt(
+            {
+                type: "list",
+                message: "Who is the employee's manager?",
+                name: "empMan",
+                choices: manArray
+            }
+        )
+        .then((answer) => {
+            db.query("UPDATE employee SET ? WHERE ?",
+            [
+                {manager_id: answer.empMan},
+                {first_name: firstName}
+            ],
+            (err, res) => {
+                if (err) throw err;
+                startApp();
+            })
+        })
+}
 
 //Prompts the user to choose an employee they want to remove, then deletes that employee's row from the employee table
 const removeEmp = () => {
@@ -188,7 +247,7 @@ const removeEmp = () => {
             .then((answer) => {
                 const str = answer.empRemove;
                 const firstWord = str.split(" ")[0];
-                db.query("DELETE * FROM employee where ?",
+                db.query("DELETE FROM employee where ?",
                 {
                     first_name: firstWord
                 },
@@ -227,8 +286,7 @@ const updateEmpRole = () => {
 };
 
 const whichRole = (firstWord) => {
-    db.query("SELECT * FROM role", 
-        (err, res) => {
+    db.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
         const roleArray = [];
         res.forEach(({ id, title, salary}) => {
@@ -381,7 +439,7 @@ const removeRole = () => {
             })
             .then((answer) => {
                 const str = answer.roleRemove;
-                db.query("DELETE * FROM role where ?",
+                db.query("DELETE FROM role where ?",
                 {
                     title: str
                 },
@@ -429,10 +487,9 @@ const removeDep = () => {
     db.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
         const depArray = [];
-        res.forEach(({ title}) => {
-            const name = `${title}`;
-            depArray.push(name);
-            return depArray;
+        res.forEach(({name}) => {
+            const depName = `${name}`;
+            depArray.push(depName);
         });
         inquirer
             .prompt({
@@ -443,7 +500,7 @@ const removeDep = () => {
             })
             .then((answer) => {
                 const str = answer.depRemove;
-                db.query("DELETE * FROM department where ?",
+                db.query("DELETE FROM department where ?",
                 {
                     name: str
                 },

@@ -19,8 +19,8 @@ I created this app to allow business owners the ability to view and manage their
 ## Installation
 ---
 1. Clone the repository in terminal
-2. Run npm i in terminal
-3. Run node server.js in terminal
+2. Run "npm i" in terminal
+3. Run "node server.js" or "npm start" in terminal
 4. You will be prompted with choices and questions. The app is working!
 ## Usage
 ---

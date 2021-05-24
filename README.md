@@ -13,6 +13,7 @@ I created this app to allow business owners the ability to view and manage their
 ---
 - [Installation](#installation)
 - [Usage](#usage)
+- [Technologies](#technologies)
 - [License](#license)
 - [Complications](#complications)
 - [Features](#features)
@@ -35,6 +36,11 @@ I created this app to allow business owners the ability to view and manage their
 7. In order to remove a Department, Role, or Employee scroll down the list and choose which one you would like to remove.
 8. As Departments, Roles, and/or Employees are changing you will want to update the information. Scroll to the Update option that applies to the change and make the updates.
 9. If you would like to see the total utilized budget for a specific department in your business you can scroll to View Total Budget By Department and choose which department you would like to view.
+## Technologies
+---
+* Node.js
+* MySQL
+* Inquirer
 ## License
 ---
 This project is licensed under the MIT license.
